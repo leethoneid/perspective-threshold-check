@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Perspective API shuts down Dec 31 — Will your moderation silently pass everything on Jan 1?</title>
+<style>
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.65;color:#1a1a1a;margin:0;padding:24px;background:#fafafa}
+main{max-width:720px;margin:0 auto;background:#fff;padding:32px;border:1px solid #e5e5e5;border-radius:12px}
+h1{font-size:28px;line-height:1.3;margin:0 0 8px}
+.sub{font-size:18px;color:#444;margin:0 0 24px}
+h2{font-size:20px;margin-top:28px}
+h2 span{font-weight:400;color:#666;font-size:16px}
+form{border:1px solid #ddd;border-radius:8px;padding:20px;margin-top:16px;background:#fbfbfb}
+label{display:block;margin:12px 0}
+input[type=email],input[type=text]{width:100%;padding:10px;margin-top:4px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:16px}
+input[type=checkbox]{margin-right:8px}
+button{background:#111;color:#fff;border:0;padding:12px 24px;border-radius:6px;font-size:16px;cursor:pointer}
+.note{color:#666;font-size:14px}
+.ok{display:none;background:#e6f4ea;border:1px solid #a3d9a5;padding:12px;border-radius:8px;margin-bottom:16px}
+hr{border:0;border-top:1px solid #e5e5e5;margin:32px 0}
+.zh{color:#333}
+</style>
+</head>
+<body>
+<main>
+<div class="ok" id="okmsg">Thanks — your request is in. One email when the CLI is ready, plus a sample report. / 谢谢，已收到。工具就绪时会发一封邮件，附一份报告样本。</div>
+<h1>Perspective API shuts down Dec 31. Will your moderation silently pass everything on Jan 1?</h1>
+<p class="sub">A self-run CLI that scans your call sites, replays your real traffic against a replacement scorer, and hands you a threshold-mapping report — before the shutdown, not after.</p>
+<h2>The problem</h2>
+<p>Google's Perspective API stops working after December 31, 2026. No extension. No official migration support.</p>
+<p>The dangerous failure isn't "it breaks loudly." In the Discourse plugin's code, when a response comes back without attributeScores — the shape of an error body — scores silently become 0.0. Every post is treated as clean. (Connection failures raise a visible error; error-body responses don't. What the endpoint actually returns on Jan 1 is still unknown — which is exactly why you check now, not then.)</p>
+<p>And replacement scores aren't comparable. There is no single equivalent for TOXICITY; thresholds don't carry over from one scorer to another. The only way to set new thresholds is to replay your own traffic and see how the new scorer behaves on it.</p>
+<h2>What this does <span>(self-run CLI, runs in your own infra)</span></h2>
+<ol>
+<li><strong>Call-site scan</strong> — finds every Perspective call in your code, and every place a missing score becomes 0.</li>
+<li><strong>Shadow dual-run</strong> — runs Perspective and your replacement side by side on your real traffic, before Dec 31, and records how each scores the same comments.</li>
+<li><strong>Threshold-mapping report</strong> — a measurement report: old vs. new scorer behavior on your traffic, plus a threshold map you set yourself.</li>
+</ol>
+<h2>What this is not</h2>
+<p>Not a hosted service. Not a moderation model. Not a guarantee. It measures; you decide the thresholds; you own the moderation outcomes. It never sends your comment data anywhere — it runs where your code already runs.</p>
+<h2>Price <span>(exploring, not final)</span></h2>
+<p>One-time migration pack, exploring $49–149. Tell us below if you'd pay in that range once it's ready — checking the box is separate from leaving your email, and it only counts if you mean it.</p>
+<form action="https://formsubmit.co/yeeli675@gmail.com" method="POST">
+<input type="hidden" name="_subject" value="Perspective landing: new signup">
+<input type="hidden" name="_template" value="table">
+<input type="hidden" name="_captcha" value="false">
+<input type="text" name="_honeypot" style="display:none">
+<input type="hidden" name="_next" value="https://leethoneid.github.io/perspective-threshold-check/?ok=1">
+<label>Email / 邮箱 <input type="email" name="email" required></label>
+<label>What are you running? / 你在跑什么？ <input type="text" name="platform" placeholder="Discourse / Coral / game chat / other"></label>
+<label><input type="checkbox" name="paid_intent" value="yes"> I'd pay $49–149 for this once it's ready. / 工具就绪后，我愿意付 $49–149 买它。</label>
+<label><input type="checkbox" name="free_checklist" value="yes"> Also send me the free fail-open scan checklist. / 另外发我一份免费 fail-open 自查清单。</label>
+<button type="submit">Tell me when it's ready / 工具就绪时告诉我</button>
+</form>
+<p class="note">One email when the CLI is ready, plus a sample report. No spam. This page collects only what you type in the form above.</p>
+<hr>
+<div class="zh">
+<h1>Perspective API 12 月 31 日关停。1 月 1 日，你的审核会不会静默放行一切？</h1>
+<p class="sub">一个自跑 CLI：扫描你的调用点、在真实流量上对替代 scorer 做影子双跑、交给你一份阈值映射报告——关停前做，不是关停后。</p>
+<h2>问题</h2>
+<p>Google Perspective API 在 2026 年 12 月 31 日之后停止工作，不可延期，官方不提供迁移支持。</p>
+<p>最危险的故障不是“大声报错”。Discourse 插件代码里，响应体一旦没有 attributeScores（错误体的形态），分数会静默变成 0.0，每条帖子都被当作干净放行。（连接失败会抛可见错误；错误体响应不会。1 月 1 日端点实际返回什么形态目前未知——所以要现在查，不是到时再查。）</p>
+<p>而且替代品的分数不可比：TOXICITY 没有单一等价物，阈值带不过去。唯一能定新阈值的办法，是拿你自己的真实流量重跑一遍，看新 scorer 在上面怎么打分。</p>
+<h2>这个工具做什么 <span>（自跑 CLI，在你自己的 infra 里跑）</span></h2>
+<ol>
+<li><strong>调用点扫描</strong>——找出代码里每一处 Perspective 调用，以及每一处“缺分数就当 0”的地方。</li>
+<li><strong>影子双跑</strong>——12 月 31 日之前，让 Perspective 和替代品在你的真实流量上并排跑，记录它们对同一批评论的打分差异。</li>
+<li><strong>阈值映射报告</strong>——一份测量报告：新旧 scorer 在你流量上的行为对照＋你自己定的阈值映射表。</li>
+</ol>
+<h2>它不是什么</h2>
+<p>不是托管服务，不是审核模型，不做任何保证。它只测量；阈值你自己定；审核后果你自己担。它不把你的评论数据发往任何地方——就在你代码已经跑的地方跑。</p>
+<h2>价格 <span>（意向探测，非定价）</span></h2>
+<p>一次性迁移包，正在探测 $49–149 区间。下面勾选“愿意付这个价”与留邮箱是两回事，只有真愿意才算。</p>
+<p class="note">表单同上。工具就绪时发一封邮件，附一份报告样本。不发垃圾邮件。</p>
+</div>
+</main>
+<script>if(new URLSearchParams(location.search).get('ok')==='1'){document.getElementById('okmsg').style.display='block';}</script>
+</body>
+</html>
